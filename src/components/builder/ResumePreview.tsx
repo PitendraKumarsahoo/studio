@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import Image from 'next/image';
-import { Mail, Phone, MapPin, Globe, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe, Linkedin, Link as LinkIcon } from 'lucide-react';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
 
 type PersonalInfo = {
@@ -40,12 +40,35 @@ type Skill = {
   name: string;
 };
 
+type Project = {
+    id: number;
+    name: string;
+    description?: string;
+    link?: string;
+};
+
+type Certification = {
+    id: number;
+    name: string;
+    authority?: string;
+    date?: string;
+};
+
+type Language = {
+    id: number;
+    name: string;
+    proficiency?: string;
+};
+
 type ResumeData = {
   personalInfo: PersonalInfo;
   summary: string;
   experience: Experience[];
   education: Education[];
   skills: Skill[];
+  projects: Project[];
+  certifications: Certification[];
+  languages: Language[];
 };
 
 interface TemplateProps {
@@ -70,6 +93,9 @@ const SafeData = (data: Partial<ResumeData>): ResumeData => ({
   experience: data.experience || [],
   education: data.education || [],
   skills: data.skills || [],
+  projects: data.projects || [],
+  certifications: data.certifications || [],
+  languages: data.languages || [],
 });
 
 const TemplateWrapper: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className = '' }) => (
@@ -79,7 +105,7 @@ const TemplateWrapper: React.FC<{ children: React.ReactNode, className?: string 
 );
 
 const Primo: React.FC<TemplateProps> = ({ data, color, variant }) => {
-  const { personalInfo, summary, experience, education, skills } = SafeData(data);
+  const { personalInfo, summary, experience, education, skills, projects } = SafeData(data);
   const isVariant = variant === 'blue';
 
   return (
@@ -98,6 +124,9 @@ const Primo: React.FC<TemplateProps> = ({ data, color, variant }) => {
         {experience.length > 0 && <section className="mb-6"><h2 className="text-lg font-bold mb-3 uppercase tracking-wider" style={{ color }}>Experience</h2>{experience.map(exp => (
           <div key={exp.id} className="mb-4"><h3 className="font-semibold">{exp.position || 'Position'}</h3><div className="flex justify-between text-sm italic"><p>{exp.company || 'Company'}</p><p>{formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}</p></div><p className="text-sm mt-1 text-gray-700 whitespace-pre-line">{exp.description}</p></div>
         ))}</section>}
+        {projects.length > 0 && <section className="mb-6"><h2 className="text-lg font-bold mb-3 uppercase tracking-wider" style={{ color }}>Projects</h2>{projects.map(proj => (
+          <div key={proj.id} className="mb-4"><h3 className="font-semibold">{proj.name || 'Project Name'}</h3>{proj.link && <a href={proj.link} className="text-xs text-gray-500 flex items-center gap-1"><LinkIcon size={10} />{proj.link}</a>}<p className="text-sm mt-1 text-gray-700 whitespace-pre-line">{proj.description}</p></div>
+        ))}</section>}
         {education.length > 0 && <section className="mb-6"><h2 className="text-lg font-bold mb-3 uppercase tracking-wider" style={{ color }}>Education</h2>{education.map(edu => (
           <div key={edu.id} className="mb-2"><div className="flex justify-between"><h3 className="font-semibold">{edu.degree || 'Degree'}</h3><p className="text-sm italic">{formatDate(edu.startDate)} - {edu.current ? 'Present' : formatDate(edu.endDate)}</p></div><p className="text-sm">{edu.school || 'School'} - {edu.field || 'Field of Study'}</p></div>
         ))}</section>}
@@ -110,7 +139,7 @@ const Primo: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Diamond: React.FC<TemplateProps> = ({ data, color, variant }) => {
-  const { personalInfo, summary, experience, education, skills } = SafeData(data);
+  const { personalInfo, summary, experience, education, skills, languages } = SafeData(data);
   const isVariant = variant === 'green';
   const profilePic = getPlaceholderImage('template-profile-picture');
   const imageSrc = personalInfo.photo || profilePic.imageUrl;
@@ -131,6 +160,7 @@ const Diamond: React.FC<TemplateProps> = ({ data, color, variant }) => {
             {personalInfo.website && <div className="flex items-center gap-2"><Globe size={14} />{personalInfo.website}</div>}
         </div>
         {skills.length > 0 && <div className="mt-6"><h2 className="text-lg font-semibold border-b border-white/30 pb-1 mb-2">Skills</h2><ul className="list-disc list-inside text-sm">{skills.map(skill => <li key={skill.id}>{skill.name}</li>)}</ul></div>}
+        {languages.length > 0 && <div className="mt-6"><h2 className="text-lg font-semibold border-b border-white/30 pb-1 mb-2">Languages</h2><ul className="list-disc list-inside text-sm">{languages.map(lang => <li key={lang.id}>{lang.name} ({lang.proficiency})</li>)}</ul></div>}
       </div>
       <div className="w-2/3 p-8">
         {summary && <section className="mb-6"><h2 className="text-2xl font-bold mb-2" style={{ color }}>Summary</h2><p className="text-sm text-gray-700 leading-relaxed">{summary}</p></section>}
@@ -146,7 +176,7 @@ const Diamond: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Cascade: React.FC<TemplateProps> = ({ data, color, variant }) => {
-    const { personalInfo, summary, experience, education, skills } = SafeData(data);
+    const { personalInfo, summary, experience, education, skills, certifications } = SafeData(data);
     const isVariant = variant === 'purple';
     return (
         <TemplateWrapper className="p-8">
@@ -161,6 +191,7 @@ const Cascade: React.FC<TemplateProps> = ({ data, color, variant }) => {
                     <div className="space-y-1 text-sm">{personalInfo.email && <p>{personalInfo.email}</p>}{personalInfo.phone && <p>{personalInfo.phone}</p>}{personalInfo.location && <p>{personalInfo.location}</p>}</div>
                     {skills.length > 0 && <div className="mt-4"><h2 className="text-xl font-bold mb-2" style={{ color }}>Skills</h2><div className="flex flex-wrap gap-2">{skills.map(skill => <span key={skill.id} className="text-xs bg-gray-200 px-2 py-1 rounded">{skill.name}</span>)}</div></div>}
                     {education.length > 0 && <div className="mt-4"><h2 className="text-xl font-bold mb-2" style={{ color }}>Education</h2>{education.map(edu => <div key={edu.id} className="text-sm mb-1"><h3 className="font-semibold">{edu.degree}</h3><p>{edu.school}</p></div>)}</div>}
+                    {certifications.length > 0 && <div className="mt-4"><h2 className="text-xl font-bold mb-2" style={{ color }}>Certifications</h2>{certifications.map(cert => <div key={cert.id} className="text-sm"><p className="font-semibold">{cert.name}</p></div>)}</div>}
                 </div>
                 <main className={`${isVariant ? 'col-span-2' : ''}`}>
                     <h2 className="text-xl font-bold mb-4" style={{ color }}>Work Experience</h2>
@@ -182,7 +213,7 @@ const Cascade: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Concept: React.FC<TemplateProps> = ({ data, color, variant }) => {
-    const { personalInfo, summary, experience, education, skills } = SafeData(data);
+    const { personalInfo, summary, experience, education, skills, projects } = SafeData(data);
     const isVariant = variant === 'teal';
     return (
         <TemplateWrapper>
@@ -206,6 +237,7 @@ const Concept: React.FC<TemplateProps> = ({ data, color, variant }) => {
                         {experience.length > 0 && <section><h2 className="text-lg font-bold mb-3 uppercase" style={{ color }}>Experience</h2>{experience.map(exp => (
                             <div key={exp.id} className="mb-4"><h3 className="font-semibold">{exp.position} at {exp.company}</h3><p className="text-xs text-gray-500">{formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}</p><p className="text-sm mt-1 whitespace-pre-line">{exp.description}</p></div>
                         ))}</section>}
+                        {projects.length > 0 && <section className="mt-6"><h2 className="text-lg font-bold mb-3 uppercase" style={{ color }}>Projects</h2>{projects.map(proj => <div key={proj.id} className="mb-2"><h3 className="font-semibold text-sm">{proj.name}</h3><p className="text-xs">{proj.description}</p></div>)}</section>}
                     </div>
                     <div>
                          {education.length > 0 && <section className="mb-6"><h2 className="text-lg font-bold mb-3 uppercase" style={{ color }}>Education</h2>{education.map(edu => <div key={edu.id}><h3 className="font-semibold text-sm">{edu.degree}</h3><p className="text-xs">{edu.school}</p></div>)}</section>}
@@ -218,7 +250,7 @@ const Concept: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Muse: React.FC<TemplateProps> = ({ data, color, variant }) => {
-    const { personalInfo, summary, experience, education, skills } = SafeData(data);
+    const { personalInfo, summary, experience, education, skills, certifications } = SafeData(data);
     return (
         <TemplateWrapper className="p-10 font-serif">
             <header className="text-center mb-8">
@@ -232,6 +264,7 @@ const Muse: React.FC<TemplateProps> = ({ data, color, variant }) => {
                     <div><h2 className="text-lg font-bold mb-2" style={{ color }}>CONTACT</h2><div className="text-sm space-y-1">{personalInfo.email && <p>{personalInfo.email}</p>}{personalInfo.phone && <p>{personalInfo.phone}</p>}{personalInfo.location && <p>{personalInfo.location}</p>}</div></div>
                     {education.length > 0 && <div><h2 className="text-lg font-bold mb-2" style={{ color }}>EDUCATION</h2>{education.map(edu => <div key={edu.id} className="text-sm"><h3 className="font-semibold">{edu.degree}</h3><p>{edu.school}</p></div>)}</div>}
                     {skills.length > 0 && <div><h2 className="text-lg font-bold mb-2" style={{ color }}>SKILLS</h2><div className="text-sm space-y-1">{skills.map(skill => <p key={skill.id}>{skill.name}</p>)}</div></div>}
+                    {certifications.length > 0 && <div><h2 className="text-lg font-bold mb-2" style={{ color }}>CERTIFICATIONS</h2><div className="text-sm space-y-1">{certifications.map(cert => <p key={cert.id}>{cert.name}</p>)}</div></div>}
                 </div>
                 <div className="col-span-8">
                     {summary && <section className="mb-6"><h2 className="text-lg font-bold mb-2" style={{ color }}>PROFILE</h2><p className="text-sm text-gray-700">{summary}</p></section>}
@@ -246,7 +279,7 @@ const Muse: React.FC<TemplateProps> = ({ data, color, variant }) => {
 
 
 const Iconic: React.FC<TemplateProps> = ({ data, color, variant }) => {
-    const { personalInfo, summary, experience, education, skills } = SafeData(data);
+    const { personalInfo, summary, experience, education, skills, projects } = SafeData(data);
     return (
         <TemplateWrapper className="flex">
             <div className="w-1/3 p-6" style={{ backgroundColor: color }}>
@@ -265,13 +298,16 @@ const Iconic: React.FC<TemplateProps> = ({ data, color, variant }) => {
                 {experience.length > 0 && <section><h2 className="text-xl font-bold border-b-2 pb-1" style={{borderColor: color}}>EXPERIENCE</h2>{experience.map(exp => (
                     <div key={exp.id} className="mt-3"><h3 className="font-semibold text-lg">{exp.position}</h3><p className="italic text-sm text-gray-600">{exp.company} / {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}</p><p className="text-sm mt-1 whitespace-pre-line">{exp.description}</p></div>
                 ))}</section>}
+                {projects.length > 0 && <section className="mt-6"><h2 className="text-xl font-bold border-b-2 pb-1" style={{borderColor: color}}>PROJECTS</h2>{projects.map(proj => (
+                    <div key={proj.id} className="mt-3"><h3 className="font-semibold text-lg">{proj.name}</h3><p className="text-sm mt-1 whitespace-pre-line">{proj.description}</p></div>
+                ))}</section>}
             </div>
         </TemplateWrapper>
     );
 };
 
 const Influx: React.FC<TemplateProps> = ({ data, color, variant }) => {
-    const { personalInfo, summary, experience, education, skills } = SafeData(data);
+    const { personalInfo, summary, experience, education, skills, projects } = SafeData(data);
     return (
         <TemplateWrapper className="relative p-8">
             <div className="absolute top-0 left-0 bottom-0 w-1/3" style={{ backgroundColor: `${color}20` }}></div>
@@ -287,6 +323,9 @@ const Influx: React.FC<TemplateProps> = ({ data, color, variant }) => {
                     {experience.length > 0 && <section><h2 className="text-xl font-bold mb-3">EXPERIENCE</h2>{experience.map(exp => (
                         <div key={exp.id} className="mb-4"><h3 className="font-semibold">{exp.position} at {exp.company}</h3><p className="text-xs text-gray-500">{formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}</p><p className="text-sm mt-1 whitespace-pre-line">{exp.description}</p></div>
                     ))}</section>}
+                    {projects.length > 0 && <section className="mt-6"><h2 className="text-xl font-bold mb-3">PROJECTS</h2>{projects.map(proj => (
+                        <div key={proj.id} className="mb-4"><h3 className="font-semibold">{proj.name}</h3><p className="text-sm mt-1 whitespace-pre-line">{proj.description}</p></div>
+                    ))}</section>}
                 </div>
             </div>
         </TemplateWrapper>
@@ -294,7 +333,7 @@ const Influx: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Modern: React.FC<TemplateProps> = ({ data, color, variant }) => {
-    const { personalInfo, summary, experience, education, skills } = SafeData(data);
+    const { personalInfo, summary, experience, education, skills, projects } = SafeData(data);
     return (
         <TemplateWrapper className="p-10">
             <header className="mb-8"><h1 className="text-5xl font-thin tracking-wider uppercase">{personalInfo.fullName}</h1><p className="text-lg" style={{color}}>{personalInfo.jobTitle}</p></header>
@@ -302,6 +341,7 @@ const Modern: React.FC<TemplateProps> = ({ data, color, variant }) => {
                 <div className="col-span-2">
                     {summary && <section className="mb-6"><h2 className="font-bold text-lg mb-2">PROFILE</h2><p className="text-sm">{summary}</p></section>}
                     {experience.length > 0 && <section><h2 className="font-bold text-lg mb-3">EXPERIENCE</h2>{experience.map(exp => <div key={exp.id} className="mb-4"><h3 className="font-semibold">{exp.position}</h3><p className="text-sm italic">{exp.company} | {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}</p><p className="text-sm mt-1 whitespace-pre-line">{exp.description}</p></div>)}</section>}
+                    {projects.length > 0 && <section className="mt-6"><h2 className="font-bold text-lg mb-3">PROJECTS</h2>{projects.map(proj => <div key={proj.id} className="mb-4"><h3 className="font-semibold">{proj.name}</h3><p className="text-sm mt-1 whitespace-pre-line">{proj.description}</p></div>)}</section>}
                 </div>
                 <div className="col-span-1 space-y-6 text-sm">
                     <div><h2 className="font-bold text-lg mb-2">CONTACT</h2>{personalInfo.email && <p>{personalInfo.email}</p>}{personalInfo.phone && <p>{personalInfo.phone}</p>}{personalInfo.location && <p>{personalInfo.location}</p>}</div>
@@ -314,12 +354,13 @@ const Modern: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Minimo: React.FC<TemplateProps> = ({ data, color, variant }) => {
-    const { personalInfo, summary, experience, education, skills } = SafeData(data);
+    const { personalInfo, summary, experience, education, skills, projects } = SafeData(data);
     return (
         <TemplateWrapper className="p-12 font-mono text-sm">
             <header className="mb-6"><h1 className="text-2xl font-bold">{personalInfo.fullName}</h1><div className="flex gap-4 text-xs">{personalInfo.email && <p>{personalInfo.email}</p>}{personalInfo.phone && <p>{personalInfo.phone}</p>}</div></header>
             {summary && <section className="mb-5"><h2 className="font-bold uppercase tracking-widest mb-1" style={{color}}>Summary</h2><p>{summary}</p></section>}
             {experience.length > 0 && <section className="mb-5"><h2 className="font-bold uppercase tracking-widest mb-2" style={{color}}>Experience</h2>{experience.map(exp => <div key={exp.id} className="mb-3"><h3 className="font-bold">{exp.position}, {exp.company}</h3><p className="text-xs">{formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}</p><div className="whitespace-pre-line mt-1">{exp.description}</div></div>)}</section>}
+            {projects.length > 0 && <section className="mb-5"><h2 className="font-bold uppercase tracking-widest mb-2" style={{color}}>Projects</h2>{projects.map(proj => <div key={proj.id} className="mb-3"><h3 className="font-bold">{proj.name}</h3><div className="whitespace-pre-line mt-1">{proj.description}</div></div>)}</section>}
             {education.length > 0 && <section className="mb-5"><h2 className="font-bold uppercase tracking-widest mb-2" style={{color}}>Education</h2>{education.map(edu => <div key={edu.id} className="mb-2"><h3 className="font-bold">{edu.degree}, {edu.school}</h3><p className="text-xs">{formatDate(edu.startDate)} - {edu.current ? 'Present' : formatDate(edu.endDate)}</p></div>)}</section>}
             {skills.length > 0 && <section><h2 className="font-bold uppercase tracking-widest mb-2" style={{color}}>Skills</h2><p>{skills.map(s => s.name).join(', ')}</p></section>}
         </TemplateWrapper>
@@ -327,7 +368,7 @@ const Minimo: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Academic: React.FC<TemplateProps> = ({ data, color }) => {
-  const { personalInfo, summary, experience, education, skills } = SafeData(data);
+  const { personalInfo, summary, experience, education, skills, projects, certifications, languages } = SafeData(data);
   return (
     <TemplateWrapper className="p-[1in]" style={{ fontFamily: 'Times, serif' }}>
       <header className="text-center mb-4">
@@ -386,12 +427,52 @@ const Academic: React.FC<TemplateProps> = ({ data, color }) => {
       )}
       <hr className="mb-4"/>
 
+      {projects.length > 0 && (
+        <section className="mb-4">
+            <h2 className="text-base font-bold mb-2">PROJECTS</h2>
+            {projects.map(proj => (
+                <div key={proj.id} className="mb-3">
+                    <h3 className="text-sm font-bold">{proj.name}</h3>
+                    {proj.link && <a href={proj.link} className="text-sm text-blue-600 italic">{proj.link}</a>}
+                    <div className="pl-4 text-sm">
+                        {(proj.description || '').split('\n').filter(line => line.trim()).map((line, i) => (
+                            <p key={i} className="before:content-['•'] before:mr-2">{line.replace(/^•\s*/, '')}</p>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </section>
+      )}
+      <hr className="mb-4"/>
+      
       {skills.length > 0 && (
-        <section>
+        <section className="mb-4">
           <h2 className="text-base font-bold mb-2">SKILLS</h2>
           <p className="text-sm">{skills.map(skill => skill.name).join(' | ')}</p>
         </section>
       )}
+      <hr className="mb-4"/>
+
+      {certifications.length > 0 && (
+        <section className="mb-4">
+            <h2 className="text-base font-bold mb-2">CERTIFICATIONS</h2>
+            {certifications.map(cert => (
+                <div key={cert.id} className="flex justify-between items-baseline mb-1 text-sm">
+                    <p><span className="font-bold">{cert.name}</span>, {cert.authority}</p>
+                    <p>{formatDate(cert.date)}</p>
+                </div>
+            ))}
+        </section>
+      )}
+      <hr className="mb-4"/>
+
+      {languages.length > 0 && (
+        <section>
+          <h2 className="text-base font-bold mb-2">LANGUAGES</h2>
+          <p className="text-sm">{languages.map(lang => `${lang.name} (${lang.proficiency})`).join(', ')}</p>
+        </section>
+      )}
+
     </TemplateWrapper>
   );
 };
@@ -431,5 +512,3 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ template, color, data }) 
 };
 
 export default ResumePreview;
-
-    

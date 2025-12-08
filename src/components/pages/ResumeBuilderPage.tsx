@@ -14,6 +14,9 @@ import SummaryForm from '@/components/builder/sections/SummaryForm';
 import ExperienceForm from '@/components/builder/sections/ExperienceForm';
 import EducationForm from '@/components/builder/sections/EducationForm';
 import SkillsForm from '@/components/builder/sections/SkillsForm';
+import ProjectsForm from '@/components/builder/sections/ProjectsForm';
+import CertificationsForm from '@/components/builder/sections/CertificationsForm';
+import LanguagesForm from '@/components/builder/sections/LanguagesForm';
 import { useSearchParams } from 'next/navigation';
 
 const initialResumeData = {
@@ -77,6 +80,16 @@ const initialResumeData = {
     { id: 6, name: 'Power BI' },
     { id: 7, name: 'Data Modelling' },
     { id: 8, name: 'Basic Statistics' },
+  ],
+  projects: [
+    { id: 1, name: 'Sales Dashboard', description: 'Developed an interactive sales dashboard using Power BI to track KPIs and sales performance.', link: 'github.com/pitendra/sales-dashboard' },
+  ],
+  certifications: [
+      { id: 1, name: 'Microsoft Certified: Power BI Data Analyst Associate', authority: 'Microsoft', date: '2025-02' },
+  ],
+  languages: [
+      { id: 1, name: 'English', proficiency: 'Fluent' },
+      { id: 2, name: 'Hindi', proficiency: 'Native' },
   ],
 };
 
@@ -184,12 +197,15 @@ const ResumeBuilderPage = () => {
             </div>
 
             <div className="bg-card rounded-lg shadow-sm">
-              <TabsList className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 p-1 h-auto">
+              <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 p-1 h-auto">
                 <TabsTrigger value="personal">Personal</TabsTrigger>
                 <TabsTrigger value="summary">Summary</TabsTrigger>
                 <TabsTrigger value="experience">Experience</TabsTrigger>
                 <TabsTrigger value="education">Education</TabsTrigger>
                 <TabsTrigger value="skills">Skills</TabsTrigger>
+                <TabsTrigger value="projects">Projects</TabsTrigger>
+                <TabsTrigger value="certifications">Certs</TabsTrigger>
+                <TabsTrigger value="languages">Languages</TabsTrigger>
               </TabsList>
 
               <PersonalInfoForm resumeData={resumeData} setResumeData={setResumeData} />
@@ -197,6 +213,9 @@ const ResumeBuilderPage = () => {
               <ExperienceForm resumeData={resumeData} setResumeData={setResumeData} />
               <EducationForm resumeData={resumeData} setResumeData={setResumeData} />
               <SkillsForm resumeData={resumeData} setResumeData={setResumeData} />
+              <ProjectsForm resumeData={resumeData} setResumeData={setResumeData} />
+              <CertificationsForm resumeData={resumeData} setResumeData={setResumeData} />
+              <LanguagesForm resumeData={resumeData} setResumeData={setResumeData} />
             </div>
           </motion.div>
 
