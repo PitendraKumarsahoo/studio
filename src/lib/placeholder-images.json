@@ -1,3 +1,124 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "team-collaboration-1",
+      "description": "A diverse team collaborating in a modern office.",
+      "imageUrl": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx0ZWFtJTIwb2ZmaWNlfGVufDB8fHx8MTc2NTEyODg1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "team office",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "team-member-portrait-1",
+      "description": "Portrait of a team member.",
+      "imageUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjUxMTEyNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "professional portrait",
+      "width": 400,
+      "height": 400
+    },
+    {
+      "id": "blog-ats-scan",
+      "description": "Illustration of a professional resume being scanned by ATS system software.",
+      "imageUrl": "https://picsum.photos/seed/103/600/400",
+      "imageHint": "ATS scan",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "blog-recruiter-review",
+      "description": "A recruiter reviewing resumes with red marks on them.",
+      "imageUrl": "https://picsum.photos/seed/104/600/400",
+      "imageHint": "recruiter review",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "blog-career-crossroads",
+      "description": "A person standing at a crossroads, symbolizing a career path choice.",
+      "imageUrl": "https://images.unsplash.com/photo-1539992190939-08f22d7ebaad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJlZXIlMjBjaG9pY2V8ZW58MHx8fHwxNzY1MjAzNDA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "career choice",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "blog-virtual-interview",
+      "description": "A professional person in a video call interview setup.",
+      "imageUrl": "https://images.unsplash.com/photo-1516656693094-f46f5af64d6c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8dmlkZW8lMjBpbnRlcnZpZXd8ZW58MHx8fHwxNzY1MjAzNDA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "video interview",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "blog-linkedin-profile",
+      "description": "A LinkedIn profile shown on a laptop screen.",
+      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxsaW5rZWRpbiUyMHByb2ZpbGV8ZW58MHx8fHwxNzY1MjAzNDA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "linkedin profile",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "blog-writing-summary",
+      "description": "Close-up of a resume summary section being written.",
+      "imageUrl": "https://images.unsplash.com/photo-1710010966055-da0bcafdbd8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cmVzdW1lJTIwd3JpdGluZ3xlbnwwfHx8fDE3NjUyMDM0MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "resume writing",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "blog-salary-negotiation",
+      "description": "A professional handshake during a salary negotiation meeting.",
+      "imageUrl": "https://images.unsplash.com/photo-1604833102475-d50706d35edb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzYWxhcnklMjBuZWdvdGlhdGlvbnxlbnwwfHx8fDE3NjUyMDM0MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "salary negotiation",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "blog-interview-questions",
+      "description": "An interview candidate confidently answering questions from a hiring manager.",
+      "imageUrl": "https://images.unsplash.com/photo-1686771416282-3888ddaf249b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxqb2IlMjBpbnRlcnZpZXd8ZW58MHx8fHwxNzY1MjAzNDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "job interview",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "blog-personal-branding",
+      "description": "A collection of personal branding elements and a portfolio.",
+      "imageUrl": "https://images.unsplash.com/photo-1584921466621-d3a283cd3744?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb25hbCUyMGJyYW5kaW5nfGVufDB8fHx8MTc2NTE2MjMxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "personal branding",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "contact-office-map",
+      "description": "A map showing an office location.",
+      "imageUrl": "https://images.unsplash.com/photo-1665059657972-d57d620d07e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxvZmZpY2UlMjBtYXB8ZW58MHx8fHwxNzY1MjAzNDA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "office map",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "template-profile-picture",
+      "description": "A generic profile picture for a resume template.",
+      "imageUrl": "https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwcm9maWxlJTIwcGljdHVyZXxlbnwwfHx8fDE3NjUxOTIxNzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "profile picture",
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "template-preview",
+      "description": "A preview image of a resume template.",
+      "imageUrl": "https://images.unsplash.com/photo-1761881775481-40a387991652?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxyZXN1bWUlMjB0ZW1wbGF0ZXxlbnwwfHx8fDE3NjUwODgyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "resume template",
+      "width": 400,
+      "height": 518
+    },
+    {
+      "id": "home-hero-image",
+      "description": "An image of a professional resume builder interface.",
+      "imageUrl": "https://images.unsplash.com/photo-1591381287254-b3349c60bf9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cmVzdW1lJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc2NTIwMzQwNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "resume interface",
+      "width": 1200,
+      "height": 900
+    }
+  ]
 }
