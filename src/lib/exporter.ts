@@ -23,7 +23,6 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
   document.body.appendChild(clone);
 
   const A4_WIDTH_MM = 210;
-  const A4_HEIGHT_MM = 297;
 
   try {
     const canvas = await html2canvas(clone, {
@@ -41,19 +40,8 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
 
     const pdfWidth = A4_WIDTH_MM;
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    let heightLeft = pdfHeight;
-    let position = 0;
-
-    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-    heightLeft -= A4_HEIGHT_MM;
-
-    while (heightLeft > 0) {
-      position = heightLeft - pdfHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-      heightLeft -= A4_HEIGHT_MM;
-    }
+    
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
     
     pdf.save(`${(fileName || 'resume').replace(/\s+/g, '_')}.pdf`);
   } catch (error) {
