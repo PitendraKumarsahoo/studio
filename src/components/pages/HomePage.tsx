@@ -10,8 +10,8 @@ import { getPlaceholderImage } from '@/lib/placeholder-images';
 const HomePage = () => {
   const features = [
     { icon: Sparkles, title: 'AI-Powered Content', description: 'Generate professional resume content with advanced AI technology tailored to your career.' },
-    { icon: CheckCircle, title: 'ATS-Optimized', description: 'Beat applicant tracking systems with our intelligent resume formatting and keyword optimization.' },
-    { icon: Zap, title: 'Quick & Easy', description: 'Create a professional resume in minutes with our intuitive drag-and-drop builder.' },
+    { icon: Zap, title: 'Quick & Easy', description: 'Create a professional resume in minutes with our intuitive builder.' },
+    { icon: CheckCircle, title: 'ATS-Optimized', description: 'Beat applicant tracking systems with intelligent formatting and keyword optimization.' },
     { icon: Shield, title: 'Privacy First', description: 'Your data is secure and private. We never share your information with third parties.' },
   ];
 
@@ -28,7 +28,23 @@ const HomePage = () => {
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-transparent py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+             <motion.div 
+              initial={{ opacity: 0, x: -50 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.6, delay: 0.2 }} 
+              className="relative hidden lg:block"
+            >
+              <div className="absolute -inset-8 bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl rounded-full -z-10"></div>
+              <Image 
+                className="relative rounded-2xl shadow-2xl w-full" 
+                alt="Professional resume builder interface" 
+                src={heroImage.imageUrl} 
+                width={heroImage.width} 
+                height={heroImage.height} 
+                data-ai-hint={heroImage.imageHint} 
+              />
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
               <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
                 <Sparkles className="w-4 h-4" />
                 <span className="text-sm font-semibold">AI-Powered Resume Builder</span>
@@ -56,11 +72,6 @@ const HomePage = () => {
                 <div className="flex items-center space-x-2"><Award className="w-5 h-5 text-primary" /><span>ATS-Optimized</span></div>
               </div>
             </motion.div>
-
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl rounded-full"></div>
-              <Image className="relative rounded-2xl shadow-2xl w-full" alt="Professional resume builder interface" src={heroImage.imageUrl} width={heroImage.width} height={heroImage.height} data-ai-hint={heroImage.imageHint} />
-            </motion.div>
           </div>
         </div>
       </section>
@@ -76,7 +87,14 @@ const HomePage = () => {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <motion.div key={index} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: index * 0.1 }} className="bg-card p-8 rounded-2xl shadow-lg border border-border/50 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-card p-8 rounded-2xl shadow-lg border border-border/50 hover:shadow-xl hover:-translate-y-1 transition-all"
+                >
                   <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-5">
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
