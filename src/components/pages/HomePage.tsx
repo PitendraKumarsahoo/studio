@@ -21,30 +21,14 @@ const HomePage = () => {
     { name: 'Emily Rodriguez', role: 'Product Designer', company: 'Apple', content: 'Beautiful templates and easy to use. I got 3 interview calls within a week of updating my resume!', rating: 5 },
   ];
 
-  const heroImage = getPlaceholderImage('home-hero-image');
+  const heroImage = getPlaceholderImage('home-hero-image-small');
 
   return (
     <>
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-transparent py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-             <motion.div 
-              initial={{ opacity: 0, x: -50 }} 
-              animate={{ opacity: 1, x: 0 }} 
-              transition={{ duration: 0.6, delay: 0.2 }} 
-              className="relative hidden lg:block"
-            >
-              <div className="absolute -inset-8 bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl rounded-full -z-10"></div>
-              <Image 
-                className="relative rounded-2xl shadow-2xl w-full" 
-                alt="Professional resume builder interface" 
-                src={heroImage.imageUrl} 
-                width={heroImage.width} 
-                height={heroImage.height} 
-                data-ai-hint={heroImage.imageHint} 
-              />
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
               <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
                 <Sparkles className="w-4 h-4" />
                 <span className="text-sm font-semibold">AI-Powered Resume Builder</span>
@@ -71,6 +55,22 @@ const HomePage = () => {
                 <div className="flex items-center space-x-2"><Users className="w-5 h-5 text-primary" /><span>100K+ users</span></div>
                 <div className="flex items-center space-x-2"><Award className="w-5 h-5 text-primary" /><span>ATS-Optimized</span></div>
               </div>
+            </motion.div>
+             <motion.div 
+              initial={{ opacity: 0, x: 50 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.6, delay: 0.2 }} 
+              className="relative hidden lg:block"
+            >
+              <div className="absolute -inset-8 bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl rounded-full -z-10"></div>
+              <Image 
+                className="relative rounded-2xl shadow-2xl w-full" 
+                alt="Professional resume builder interface" 
+                src={heroImage.imageUrl} 
+                width={heroImage.width} 
+                height={heroImage.height} 
+                data-ai-hint={heroImage.imageHint} 
+              />
             </motion.div>
           </div>
         </div>
