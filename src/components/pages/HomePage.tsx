@@ -21,51 +21,62 @@ const HomePage = () => {
     { name: 'Emily Rodriguez', role: 'Product Designer', company: 'Apple', content: 'Beautiful templates and easy to use. I got 3 interview calls within a week of updating my resume!', rating: 5 },
   ];
 
-  const heroImage = getPlaceholderImage('home-hero-abstract-bw');
+  const heroImage = getPlaceholderImage('home-hero-make-com');
 
   return (
     <>
-      <section className="relative overflow-hidden bg-slate-900 text-white py-20 lg:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-accent/30 opacity-30 blur-3xl"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-           <motion.div 
-              initial={{ opacity: 0, y: -50 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.6 }}
-              className="grid lg:grid-cols-2 gap-16 items-center"
-            >
-              <div className="text-left">
-                <h1 className="font-headline text-4xl lg:text-7xl font-bold mb-6 leading-tight">
-                  Design workflows
-                  <br />
-                  <span className="text-fuchsia-500">#withResumeAI</span>
-                </h1>
-                <p className="text-xl text-slate-300 mb-8 max-w-lg">
-                  ResumeAI lets you design, build, and automate anything - from tasks and workflows to apps and systems - in a few clicks.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 items-start">
-                  <Link href="/builder">
-                    <Button size="lg" className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-8 py-6 text-lg rounded-full">
-                      Get started free
-                    </Button>
-                  </Link>
-                </div>
-                 <p className="text-sm text-slate-400 mt-4">
-                  <CheckCircle className="w-4 h-4 inline-block mr-1.5" />
-                  No credit card required
-                </p>
+      <section className="bg-gradient-to-b from-blue-50/50 to-background py-20 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6 }}
+            className="grid lg:grid-cols-2 gap-16 items-center"
+          >
+            <div className="text-left">
+              <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full font-semibold text-sm mb-4">
+                <Sparkles className="w-5 h-5" />
+                AI-Powered Resume Builder
               </div>
-              <div className="hidden lg:block">
-                 <Image 
+              <h1 className="font-headline text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+                Create a <span className="text-blue-600">Professional</span> Resume in <span className="text-teal-500">Minutes</span>
+              </h1>
+              <p className="text-lg text-foreground/80 mb-8 max-w-xl">
+                Build an ATS-optimized resume with AI-powered tools. Choose from 18+ professional templates and land your dream job faster.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                <Link href="/builder">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
+                    Build My Resume
+                  </Button>
+                </Link>
+                <Link href="/templates">
+                  <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
+                    View Templates
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="hidden lg:flex items-center justify-center p-4"
+            >
+              <div className="relative w-full max-w-lg">
+                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400 to-pink-500 rounded-3xl blur-xl opacity-50"></div>
+                <Image 
                   src={heroImage.imageUrl} 
                   alt={heroImage.description} 
                   width={heroImage.width} 
                   height={heroImage.height} 
                   data-ai-hint={heroImage.imageHint}
-                  className="w-full h-auto"
+                  className="relative w-full h-auto rounded-2xl shadow-2xl"
+                  priority
                 />
               </div>
             </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -170,5 +181,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-    

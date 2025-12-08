@@ -113,28 +113,12 @@
       "height": 518
     },
     {
-      "id": "home-hero-image-small",
-      "description": "A small image of a professional resume builder interface.",
-      "imageUrl": "https://i.imgur.com/x03t581.png",
-      "imageHint": "workflow ui",
-      "width": 600,
-      "height": 388
-    },
-    {
-      "id": "home-hero-image-right",
-      "description": "A screenshot of a workflow builder interface with connected nodes.",
-      "imageUrl": "https://i.imgur.com/L44zC0h.png",
-      "imageHint": "workflow nodes",
-      "width": 500,
-      "height": 500
-    },
-    {
-      "id": "home-hero-abstract-bw",
-      "description": "An abstract black and white design image for the hero section.",
-      "imageUrl": "https://i.imgur.com/2j9sDUM.png",
-      "imageHint": "abstract design",
-      "width": 500,
-      "height": 500
+      "id": "home-hero-make-com",
+      "description": "A screenshot of the Make.com workflow builder.",
+      "imageUrl": "https://i.imgur.com/8Q3J4Vz.png",
+      "imageHint": "workflow builder",
+      "width": 550,
+      "height": 344
     },
     {
       "id": "home-hero-image",
