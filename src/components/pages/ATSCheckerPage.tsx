@@ -2,7 +2,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Upload, FileText, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertTriangle, XCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { checkATSScore, suggestKeywords } from '@/lib/aiHelpers';
 import { useRouter } from 'next/navigation';
@@ -35,6 +35,7 @@ const ATSCheckerPage = () => {
     if (uploadedFile) {
       if (uploadedFile.type === 'application/pdf' || uploadedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
         setFile(uploadedFile);
+        setResults(null);
         toast({
           title: '✅ File Uploaded',
           description: `${uploadedFile.name} is ready for analysis.`,
@@ -63,33 +64,42 @@ const ATSCheckerPage = () => {
     setResults(null);
     toast({
       title: '🔍 Analyzing Resume...',
-      description: 'This may take a few moments.',
+      description: 'Our AI is scanning your resume. This may take a few moments.',
     });
 
-    const mockResults = await checkATSScore();
-    const keywords = await suggestKeywords();
+    try {
+        const mockResults = await checkATSScore();
+        const keywords = await suggestKeywords();
 
-    setResults({
-      ...mockResults,
-      keywords,
-    });
+        setResults({
+        ...mockResults,
+        keywords,
+        });
 
-    setAnalyzing(false);
-    toast({
-      title: '✅ Analysis Complete!',
-      description: 'Your ATS score is ready.',
-    });
+        toast({
+        title: '✅ Analysis Complete!',
+        description: 'Your ATS score and feedback are ready.',
+        });
+    } catch (error) {
+        toast({
+        title: '❌ Analysis Failed',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+        });
+    } finally {
+        setAnalyzing(false);
+    }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
+    if (score >= 85) return 'text-green-600';
+    if (score >= 65) return 'text-yellow-600';
     return 'text-red-600';
   };
 
   const getScoreBgColor = (score: number) => {
-    if (score >= 80) return 'bg-green-100';
-    if (score >= 60) return 'bg-yellow-100';
+    if (score >= 85) return 'bg-green-100';
+    if (score >= 65) return 'bg-yellow-100';
     return 'bg-red-100';
   };
 
@@ -104,7 +114,7 @@ const ATSCheckerPage = () => {
           <div className="text-center mb-12">
             <h1 className="font-headline text-4xl font-bold mb-4">ATS Resume Checker</h1>
             <p className="text-xl text-foreground/80">
-              Check if your resume passes Applicant Tracking Systems
+              Get an instant analysis of how well your resume is optimized for Applicant Tracking Systems.
             </p>
           </div>
 
@@ -144,6 +154,7 @@ const ATSCheckerPage = () => {
                 size="lg"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground px-8"
               >
+                {analyzing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {analyzing ? 'Analyzing...' : 'Analyze Resume'}
               </Button>
             </div>
@@ -164,7 +175,7 @@ const ATSCheckerPage = () => {
                     </span>
                   </div>
                   <h2 className="font-headline text-2xl font-bold mb-2">ATS Compatibility Score</h2>
-                  <p className="text-muted-foreground">{results.message}</p>
+                  <p className="text-muted-foreground max-w-xl mx-auto">{results.message}</p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -180,7 +191,7 @@ const ATSCheckerPage = () => {
                   </div>
                   <div className="text-center p-4 rounded-lg bg-red-100">
                     <XCircle className="w-8 h-8 text-red-600 mx-auto mb-2" />
-                    <p className="font-semibold text-red-900">Issues</p>
+                    <p className="font-semibold text-red-900">Critical Issues</p>
                     <p className="font-headline text-3xl font-bold text-red-600">{results.issues}</p>
                   </div>
                 </div>
@@ -217,7 +228,7 @@ const ATSCheckerPage = () => {
               <div className="bg-card rounded-2xl shadow-lg p-8">
                 <h3 className="font-headline text-xl font-bold mb-4">Suggested Keywords</h3>
                 <p className="text-muted-foreground mb-6">
-                  Add these keywords to improve your ATS score and match job descriptions better.
+                  Integrate these relevant keywords to improve your resume's ranking and better match target job descriptions.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   {results.keywords.map((keyword, index) => (
@@ -232,15 +243,15 @@ const ATSCheckerPage = () => {
               </div>
 
               <div className="bg-gradient-to-br from-primary to-accent rounded-2xl shadow-lg p-8 text-primary-foreground text-center">
-                <h3 className="font-headline text-2xl font-bold mb-4">Want to Improve Your Score?</h3>
+                <h3 className="font-headline text-2xl font-bold mb-4">Ready to Boost Your Score?</h3>
                 <p className="mb-6 opacity-90">
-                  Use our Resume Builder with AI-powered optimization to create an ATS-friendly resume.
+                  Our Resume Builder makes it easy to apply these suggestions and create a high-scoring, ATS-friendly resume.
                 </p>
                 <Button
                   onClick={() => router.push('/builder')}
                   className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
                 >
-                  Go to Resume Builder
+                  Improve Your Resume Now
                 </Button>
               </div>
             </motion.div>
