@@ -17,12 +17,68 @@ import SkillsForm from '@/components/builder/sections/SkillsForm';
 import { useSearchParams } from 'next/navigation';
 
 const initialResumeData = {
-  personalInfo: { fullName: 'Your Name', jobTitle: 'Professional Title', email: '', phone: '', location: '', website: '', linkedin: '' },
-  summary: '',
-  experience: [],
-  education: [],
-  skills: [],
+  personalInfo: {
+    fullName: 'Pitendra Kumar Sahoo',
+    jobTitle: 'Data Analytics Learner',
+    email: 'pitendra@example.com',
+    phone: '+91-9876543210',
+    location: 'Bhubaneswar, India',
+    linkedin: 'linkedin.com/in/pitendra-sahoo',
+    website: 'github.com/pitendra-sahoo',
+  },
+  summary: 'Highly motivated Data Analytics learner with hands-on experience in Excel, Power BI, SQL, Python, and data visualization. Strong analytical mindset with the ability to extract actionable insights and support decision-making.',
+  experience: [
+    {
+      id: 1,
+      position: 'Data Visualization Intern',
+      company: 'CTTC Bhubaneswar',
+      startDate: '2025-05',
+      endDate: '',
+      current: true,
+      description: '• Developed dashboards using Excel & Power BI\n• Cleaned and analyzed large datasets\n• Created charts to support decision-making\n• Collaborated with team on project requirements',
+    },
+    {
+      id: 2,
+      position: 'Python & SQL Practice Projects',
+      company: 'Self-directed',
+      startDate: '2023-05',
+      endDate: '',
+      current: true,
+      description: '• Developed mini-projects using Python\n• Created SQL queries for databases\n• Automated tasks using Python\n• Improved data handling & consistency',
+    },
+  ],
+  education: [
+    {
+      id: 1,
+      school: 'B.Tech in Computer Science',
+      degree: '',
+      field: '',
+      startDate: '2022-08',
+      endDate: '2026-05',
+      current: true,
+    },
+    {
+      id: 2,
+      school: 'CHSE – Science',
+      degree: '',
+      field: '',
+      startDate: '2020-06',
+      endDate: '2022-04',
+      current: false,
+    },
+  ],
+  skills: [
+    { id: 1, name: 'Data Analysis' },
+    { id: 2, name: 'SQL' },
+    { id: 3, name: 'Python' },
+    { id: 4, name: 'Data Visualization' },
+    { id: 5, name: 'Excel' },
+    { id: 6, name: 'Power BI' },
+    { id: 7, name: 'Data Modelling' },
+    { id: 8, name: 'Basic Statistics' },
+  ],
 };
+
 
 const ResumeBuilderPage = () => {
   const { toast } = useToast();
@@ -42,7 +98,11 @@ const ResumeBuilderPage = () => {
     try {
       const saved = localStorage.getItem('resumeData');
       if (saved) {
-        setResumeData(JSON.parse(saved));
+        const parsedData = JSON.parse(saved);
+        // A simple check to see if the saved data is the old initial data
+        if (parsedData.personalInfo && parsedData.personalInfo.fullName !== 'Your Name') {
+          setResumeData(parsedData);
+        }
       }
     } catch (error) {
       console.error("Error parsing resume data from localStorage", error);

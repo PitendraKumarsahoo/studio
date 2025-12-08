@@ -8,14 +8,22 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
     throw new Error("Element to capture is not defined.");
   }
 
-  // Find the actual resume component inside the scaled container.
   const resumeElement = element.firstChild as HTMLElement;
   if (!resumeElement) {
     throw new Error("Resume content not found for PDF export.");
   }
 
+  // A4 paper size in mm
+  const A4_WIDTH_MM = 210;
+  const A4_HEIGHT_MM = 297;
+
+  // Use a higher DPI for better quality
+  const DPI = 300;
+  const A4_WIDTH_PX = (A4_WIDTH_MM / 25.4) * DPI;
+
+  // Capture the canvas at a resolution that matches the A4 width at 300 DPI
   const canvas = await html2canvas(resumeElement, {
-    scale: 3, // Increased scale for better quality
+    scale: A4_WIDTH_PX / resumeElement.offsetWidth,
     useCORS: true,
     logging: false,
     width: resumeElement.offsetWidth,
@@ -25,24 +33,24 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
   });
 
   const imgData = canvas.toDataURL('image/png');
-  
-  // A4 paper size in mm
-  const A4_WIDTH = 210;
-  const A4_HEIGHT = 297;
-
   const pdf = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
     format: 'a4',
   });
 
-  // The resume element has a fixed width of 210mm. We use the full width.
-  const pdfWidth = A4_WIDTH;
+  const pdfWidth = A4_WIDTH_MM;
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+  // Check if content overflows and handle it (basic single-page handling)
+  if (pdfHeight > A4_HEIGHT_MM) {
+    console.warn("Content might be taller than a single A4 page.");
+  }
+  
+  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(pdfHeight, A4_HEIGHT_MM));
   pdf.save(`${(fileName || 'resume').replace(/\s+/g, '_')}.pdf`);
 };
+
 
 // --- DOCX EXPORT ---
 const formatDateForDocx = (dateString?: string) => {
@@ -89,7 +97,6 @@ const createExperienceEntry = (exp: any) => {
                 new TableCell({
                     children: [
                         new Paragraph({ text: `${formatDateForDocx(exp.startDate)} - ${exp.current ? 'Present' : formatDateForDocx(exp.endDate)}`, alignment: AlignmentType.RIGHT }),
-                        new Paragraph({ text: exp.location || '', alignment: AlignmentType.RIGHT })
                     ],
                     borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
                 }),
@@ -131,13 +138,12 @@ const createEducationEntry = (edu: any) => {
                     new TableCell({
                         children: [
                             new Paragraph({ children: [new TextRun({ text: edu.school, bold: true, size: 22 })] }),
-                            new Paragraph({ text: `${edu.degree}, ${edu.field}` }),
+                            new Paragraph({ text: `${edu.degree || ''}${edu.degree && edu.field ? ', ' : ''}${edu.field || ''}` }),
                         ],
                         borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
                     }),
                     new TableCell({
                         children: [
-                            new Paragraph({ text: edu.location || '', alignment: AlignmentType.RIGHT }),
                             new Paragraph({ text: `${formatDateForDocx(edu.startDate)} - ${edu.current ? 'Present' : formatDateForDocx(edu.endDate)}`, alignment: AlignmentType.RIGHT }),
                         ],
                         borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
@@ -171,9 +177,9 @@ export const exportToDOCX = async (data: any) => {
             alignment: AlignmentType.CENTER,
             children: [
                 new TextRun(personalInfo.location || ''),
-                new TextRun(' | ').break(),
+                personalInfo.email ? new TextRun(' | ').break() : new TextRun(''),
                 new TextRun(personalInfo.email || ''),
-                new TextRun(' | ').break(),
+                personalInfo.linkedin ? new TextRun(' | ').break() : new TextRun(''),
                 new TextRun(personalInfo.linkedin || ''),
             ]
         }),
@@ -226,6 +232,7 @@ export const exportToDOCX = async (data: any) => {
                 font: "Inter",
                 size: 28, // 14pt
                 bold: true,
+                allCaps: true,
             },
             paragraph: {
                 spacing: { before: 240, after: 120 },
