@@ -121,6 +121,22 @@
       "height": 388
     },
     {
+      "id": "home-hero-image-right",
+      "description": "A screenshot of a workflow builder interface with connected nodes.",
+      "imageUrl": "https://i.imgur.com/L44zC0h.png",
+      "imageHint": "workflow nodes",
+      "width": 500,
+      "height": 500
+    },
+    {
+      "id": "home-hero-abstract-bw",
+      "description": "An abstract black and white design image for the hero section.",
+      "imageUrl": "https://i.imgur.com/2j9sDUM.png",
+      "imageHint": "abstract design",
+      "width": 500,
+      "height": 500
+    },
+    {
       "id": "home-hero-image",
       "description": "An image of a professional resume builder interface.",
       "imageUrl": "https://images.unsplash.com/photo-1591381287254-b3349c60bf9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cmVzdW1lJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc2NTIwMzQwNnww&ixlib=rb-4.1.0&q=80&w=1080",

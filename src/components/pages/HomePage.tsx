@@ -21,33 +21,50 @@ const HomePage = () => {
     { name: 'Emily Rodriguez', role: 'Product Designer', company: 'Apple', content: 'Beautiful templates and easy to use. I got 3 interview calls within a week of updating my resume!', rating: 5 },
   ];
 
-  const heroImage = getPlaceholderImage('home-hero-image');
+  const heroImage = getPlaceholderImage('home-hero-abstract-bw');
 
   return (
     <>
       <section className="relative overflow-hidden bg-slate-900 text-white py-20 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-accent/30 opacity-30 blur-3xl"></div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
-           <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <h1 className="font-headline text-4xl lg:text-7xl font-bold mb-6 leading-tight">
-                Design workflows
-                <br />
-                <span className="text-fuchsia-500">#withResumeAI</span>
-              </h1>
-              <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-                ResumeAI lets you design, build, and automate anything - from tasks and workflows to apps and systems - in a few clicks.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/builder">
-                  <Button size="lg" className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-8 py-6 text-lg rounded-full">
-                    Get started free
-                  </Button>
-                </Link>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+           <motion.div 
+              initial={{ opacity: 0, y: -50 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6 }}
+              className="grid lg:grid-cols-2 gap-16 items-center"
+            >
+              <div className="text-left">
+                <h1 className="font-headline text-4xl lg:text-7xl font-bold mb-6 leading-tight">
+                  Design workflows
+                  <br />
+                  <span className="text-fuchsia-500">#withResumeAI</span>
+                </h1>
+                <p className="text-xl text-slate-300 mb-8 max-w-lg">
+                  ResumeAI lets you design, build, and automate anything - from tasks and workflows to apps and systems - in a few clicks.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 items-start">
+                  <Link href="/builder">
+                    <Button size="lg" className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-8 py-6 text-lg rounded-full">
+                      Get started free
+                    </Button>
+                  </Link>
+                </div>
+                 <p className="text-sm text-slate-400 mt-4">
+                  <CheckCircle className="w-4 h-4 inline-block mr-1.5" />
+                  No credit card required
+                </p>
               </div>
-               <p className="text-sm text-slate-400 mt-4">
-                <CheckCircle className="w-4 h-4 inline-block mr-1.5" />
-                No credit card required
-              </p>
+              <div className="hidden lg:block">
+                 <Image 
+                  src={heroImage.imageUrl} 
+                  alt={heroImage.description} 
+                  width={heroImage.width} 
+                  height={heroImage.height} 
+                  data-ai-hint={heroImage.imageHint}
+                  className="w-full h-auto"
+                />
+              </div>
             </motion.div>
         </div>
       </section>
@@ -153,3 +170,5 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+    
