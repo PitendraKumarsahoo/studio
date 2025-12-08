@@ -12,24 +12,23 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
   if (!resumeElement) {
     throw new Error("Resume content not found for PDF export.");
   }
-
+  
   // A4 paper size in mm
   const A4_WIDTH_MM = 210;
   const A4_HEIGHT_MM = 297;
 
-  // Use a higher DPI for better quality
-  const DPI = 300;
+  // Use a standard DPI for web content
+  const DPI = 96;
   const A4_WIDTH_PX = (A4_WIDTH_MM / 25.4) * DPI;
 
-  // Capture the canvas at a resolution that matches the A4 width at 300 DPI
   const canvas = await html2canvas(resumeElement, {
     scale: A4_WIDTH_PX / resumeElement.offsetWidth,
     useCORS: true,
     logging: false,
     width: resumeElement.offsetWidth,
     height: resumeElement.offsetHeight,
-    windowWidth: resumeElement.offsetWidth,
-    windowHeight: resumeElement.offsetHeight,
+    windowWidth: resumeElement.scrollWidth,
+    windowHeight: resumeElement.scrollHeight,
   });
 
   const imgData = canvas.toDataURL('image/png');
@@ -42,22 +41,32 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
   const pdfWidth = A4_WIDTH_MM;
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-  // Check if content overflows and handle it (basic single-page handling)
-  if (pdfHeight > A4_HEIGHT_MM) {
-    console.warn("Content might be taller than a single A4 page.");
+  let heightLeft = pdfHeight;
+  let position = 0;
+
+  pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+  heightLeft -= A4_HEIGHT_MM;
+
+  while (heightLeft > 0) {
+    position = heightLeft - pdfHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+    heightLeft -= A4_HEIGHT_MM;
   }
   
-  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(pdfHeight, A4_HEIGHT_MM));
   pdf.save(`${(fileName || 'resume').replace(/\s+/g, '_')}.pdf`);
 };
 
 
 // --- DOCX EXPORT ---
-const formatDateForDocx = (dateString?: string) => {
+const formatDateForDocx = (dateString?: string, current?: boolean) => {
+    if (current) return 'Present';
     if (!dateString) return '';
     try {
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        // Add a day to the date to avoid timezone issues where it might be the last day of the previous month
+        const adjustedDate = new Date(date.valueOf() + 1000 * 60 * 60 * 24);
+        return adjustedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     } catch (e) {
         return dateString; // Return original string if parsing fails
     }
@@ -78,53 +87,57 @@ const createSection = (title: string, children: any[]) => {
         new Paragraph({
              border: { bottom: { color: "auto", size: 6, space: 1, style: BorderStyle.SINGLE } }
         }),
-        new Paragraph({ text: '' }),
         ...children,
     ];
 };
 
 const createExperienceEntry = (exp: any) => {
-    const rows = [
-        new TableRow({
-            children: [
-                new TableCell({
-                    children: [
-                        new Paragraph({ children: [new TextRun({ text: exp.position, bold: true, size: 22 })] }),
-                        new Paragraph({ children: [new TextRun({ text: exp.company, size: 22 })] })
-                    ],
-                    borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
-                }),
-                new TableCell({
-                    children: [
-                        new Paragraph({ text: `${formatDateForDocx(exp.startDate)} - ${exp.current ? 'Present' : formatDateForDocx(exp.endDate)}`, alignment: AlignmentType.RIGHT }),
-                    ],
-                    borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
-                }),
-            ],
-        }),
-    ];
-
-    const descriptionItems = (exp.description || '').split('\n')
-        .filter((line: string) => line.trim())
-        .map(line => new Paragraph({
-            text: line.replace(/^•\s*/, ''),
-            bullet: { level: 0 },
-            style: 'Normal',
-        }));
-
-    const descriptionCell = new TableCell({
-        children: descriptionItems,
-        columnSpan: 2,
-        borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
-    });
-
-    rows.push(new TableRow({ children: [descriptionCell] }));
-
     return [
         new Table({
             width: { size: 100, type: WidthType.PERCENTAGE },
-            rows: rows,
+            rows: [
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            children: [
+                                new Paragraph({ children: [new TextRun({ text: exp.position, bold: true, size: 22 })] }),
+                            ],
+                            borders: { top: { style: "none" }, bottom: { style: "none" }, left: { style: "none" }, right: { style: "none" } },
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph({ text: exp.company, alignment: AlignmentType.RIGHT }),
+                            ],
+                            borders: { top: { style: "none" }, bottom: { style: "none" }, left: { style: "none" }, right: { style: "none" } },
+                        }),
+                    ],
+                }),
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            children: [
+                                new Paragraph({ children: [new TextRun({ text: formatDateForDocx(exp.startDate) })] })
+                            ],
+                             borders: { top: { style: "none" }, bottom: { style: "none" }, left: { style: "none" }, right: { style: "none" } },
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph({ text: ``, alignment: AlignmentType.RIGHT }),
+                            ],
+                            borders: { top: { style: "none" }, bottom: { style: "none" }, left: { style: "none" }, right: { style: "none" } },
+                        }),
+                    ],
+                })
+            ],
         }),
+        ...(exp.description || '').split('\n')
+            .filter((line: string) => line.trim())
+            .map(line => new Paragraph({
+                text: line.replace(/^•\s*/, ''),
+                bullet: { level: 0 },
+                style: 'Normal',
+                spacing: { before: 100 }
+            })),
         new Paragraph({ text: '' }),
     ];
 };
@@ -137,16 +150,16 @@ const createEducationEntry = (edu: any) => {
                 children: [
                     new TableCell({
                         children: [
-                            new Paragraph({ children: [new TextRun({ text: edu.school, bold: true, size: 22 })] }),
-                            new Paragraph({ text: `${edu.degree || ''}${edu.degree && edu.field ? ', ' : ''}${edu.field || ''}` }),
+                            new Paragraph({ children: [new TextRun({ text: edu.school || (edu.degree || ''), bold: true, size: 22 })] }),
+                            new Paragraph({ text: `${edu.school ? edu.degree : ''}${edu.field ? ', ' + edu.field : ''}` }),
                         ],
-                        borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
+                        borders: { top: { style: "none" }, bottom: { style: "none" }, left: { style: "none" }, right: { style: "none" } },
                     }),
                     new TableCell({
                         children: [
-                            new Paragraph({ text: `${formatDateForDocx(edu.startDate)} - ${edu.current ? 'Present' : formatDateForDocx(edu.endDate)}`, alignment: AlignmentType.RIGHT }),
+                            new Paragraph({ text: `${formatDateForDocx(edu.startDate)} - ${formatDateForDocx(edu.endDate, edu.current)}`, alignment: AlignmentType.RIGHT }),
                         ],
-                        borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
+                        borders: { top: { style: "none" }, bottom: { style: "none" }, left: { style: "none" }, right: { style: "none" } },
                     }),
                 ],
             }),
@@ -155,14 +168,8 @@ const createEducationEntry = (edu: any) => {
 };
 
 const createSkillsParagraph = (skills: any[]) => {
-    const skillTextRuns: TextRun[] = [];
-    (skills || []).forEach((skill, index) => {
-        skillTextRuns.push(new TextRun(skill.name));
-        if (index < skills.length - 1) {
-            skillTextRuns.push(new TextRun(", "));
-        }
-    });
-    return new Paragraph({ children: skillTextRuns });
+    const skillText = (skills || []).map(skill => skill.name).join(' | ');
+    return new Paragraph({ children: [new TextRun(skillText)] });
 };
 
 
@@ -177,13 +184,15 @@ export const exportToDOCX = async (data: any) => {
             alignment: AlignmentType.CENTER,
             children: [
                 new TextRun(personalInfo.location || ''),
-                personalInfo.email ? new TextRun(' | ').break() : new TextRun(''),
+                personalInfo.email ? new TextRun(' | ') : new TextRun(''),
                 new TextRun(personalInfo.email || ''),
-                personalInfo.linkedin ? new TextRun(' | ').break() : new TextRun(''),
+                personalInfo.linkedin ? new TextRun(' | ') : new TextRun(''),
                 new TextRun(personalInfo.linkedin || ''),
+                 personalInfo.website ? new TextRun(' | ') : new TextRun(''),
+                new TextRun(personalInfo.website || ''),
             ]
         }),
-        ...(summary ? createSection('Summary', [new Paragraph(summary)]) : []),
+        ...(summary ? createSection('Summary', [new Paragraph({ text: summary, spacing: { after: 200 }})]) : []),
         ...(education.length > 0 ? createSection('Education', (education || []).map(createEducationEntry)) : []),
         ...(experience.length > 0 ? createSection('Experience', (experience || []).flatMap(createExperienceEntry)) : []),
         ...(skills.length > 0 ? createSection('Skills', [createSkillsParagraph(skills)]) : []),
@@ -192,7 +201,7 @@ export const exportToDOCX = async (data: any) => {
     styles: {
         document: {
             run: {
-                font: "Inter",
+                font: "Times New Roman",
                 size: 22, // 11pt
             }
         },
@@ -203,8 +212,8 @@ export const exportToDOCX = async (data: any) => {
             next: "Normal",
             quickFormat: true,
             run: {
-                font: "Inter",
-                size: 22, // 11pt
+                font: "Times New Roman",
+                size: 22,
             },
         },
         {
@@ -214,28 +223,12 @@ export const exportToDOCX = async (data: any) => {
             next: "Normal",
             quickFormat: true,
             run: {
-                font: "Inter",
-                size: 44, // 22pt
+                font: "Times New Roman",
+                size: 36, // 18pt
                 bold: true,
             },
             paragraph: {
                 spacing: { after: 120 },
-            },
-        },
-        {
-            id: "Heading1",
-            name: "Heading 1",
-            basedOn: "Normal",
-            next: "Normal",
-            quickFormat: true,
-            run: {
-                font: "Inter",
-                size: 28, // 14pt
-                bold: true,
-                allCaps: true,
-            },
-            paragraph: {
-                spacing: { before: 240, after: 120 },
             },
         }]
     }
