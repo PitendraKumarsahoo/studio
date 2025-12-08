@@ -5,7 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Sparkles } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { generateProjectDescriptionAI } from '@/lib/aiHelpers';
 
 type Project = {
   id: number;
@@ -24,6 +26,8 @@ interface ProjectsFormProps {
 }
 
 const ProjectsForm: React.FC<ProjectsFormProps> = ({ resumeData, setResumeData }) => {
+  const { toast } = useToast();
+
   const addProject = () => {
     setResumeData((prev: any) => ({
       ...prev,
@@ -43,6 +47,18 @@ const ProjectsForm: React.FC<ProjectsFormProps> = ({ resumeData, setResumeData }
       ...prev,
       projects: prev.projects.filter((proj: Project) => proj.id !== id)
     }));
+  };
+
+  const handleGenerateDescription = async (projId: number) => {
+    const projectItem = resumeData.projects.find(proj => proj.id === projId);
+    if (!projectItem || !projectItem.name) {
+      toast({ title: '⚠️ Project Name Required', description: 'Please enter a project name first', variant: 'destructive', duration: 3000 });
+      return;
+    }
+    toast({ title: '✨ Generating Description...', description: 'AI is writing your project description' });
+    const description = await generateProjectDescriptionAI(projectItem);
+    updateProject(projId, 'description', description);
+    toast({ title: '✅ Description Generated!', description: 'Your project description has been created', duration: 3000 });
   };
 
   return (
@@ -76,7 +92,13 @@ const ProjectsForm: React.FC<ProjectsFormProps> = ({ resumeData, setResumeData }
             <Input value={proj.link} onChange={(e) => updateProject(proj.id, 'link', e.target.value)} placeholder="github.com/user/repo" />
           </div>
           <div>
-            <Label>Description</Label>
+            <div className="flex justify-between items-center mb-2">
+              <Label>Description</Label>
+              <Button onClick={() => handleGenerateDescription(proj.id)} size="sm" variant="outline">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Generate
+              </Button>
+            </div>
             <Textarea value={proj.description} onChange={(e) => updateProject(proj.id, 'description', e.target.value)} placeholder="Describe the project, your role, and technologies used..." rows={4} />
           </div>
         </div>

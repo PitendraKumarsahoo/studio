@@ -139,7 +139,7 @@ const Primo: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Diamond: React.FC<TemplateProps> = ({ data, color, variant }) => {
-  const { personalInfo, summary, experience, education, skills, languages } = SafeData(data);
+  const { personalInfo, summary, experience, education, skills } = SafeData(data);
   const isVariant = variant === 'green';
   const profilePic = getPlaceholderImage('template-profile-picture');
   const imageSrc = personalInfo.photo || profilePic.imageUrl;
@@ -160,7 +160,6 @@ const Diamond: React.FC<TemplateProps> = ({ data, color, variant }) => {
             {personalInfo.website && <div className="flex items-center gap-2"><Globe size={14} />{personalInfo.website}</div>}
         </div>
         {skills.length > 0 && <div className="mt-6"><h2 className="text-lg font-semibold border-b border-white/30 pb-1 mb-2">Skills</h2><ul className="list-disc list-inside text-sm">{skills.map(skill => <li key={skill.id}>{skill.name}</li>)}</ul></div>}
-        {languages.length > 0 && <div className="mt-6"><h2 className="text-lg font-semibold border-b border-white/30 pb-1 mb-2">Languages</h2><ul className="list-disc list-inside text-sm">{languages.map(lang => <li key={lang.id}>{lang.name} ({lang.proficiency})</li>)}</ul></div>}
       </div>
       <div className="w-2/3 p-8">
         {summary && <section className="mb-6"><h2 className="text-2xl font-bold mb-2" style={{ color }}>Summary</h2><p className="text-sm text-gray-700 leading-relaxed">{summary}</p></section>}
@@ -368,7 +367,7 @@ const Minimo: React.FC<TemplateProps> = ({ data, color, variant }) => {
 };
 
 const Academic: React.FC<TemplateProps> = ({ data, color }) => {
-  const { personalInfo, summary, experience, education, skills, projects, certifications, languages } = SafeData(data);
+  const { personalInfo, summary, experience, education, skills, projects, certifications } = SafeData(data);
   return (
     <TemplateWrapper className="p-[1in]" style={{ fontFamily: 'Times, serif' }}>
       <header className="text-center mb-4">
@@ -464,15 +463,7 @@ const Academic: React.FC<TemplateProps> = ({ data, color }) => {
             ))}
         </section>
       )}
-      <hr className="mb-4"/>
-
-      {languages.length > 0 && (
-        <section>
-          <h2 className="text-base font-bold mb-2">LANGUAGES</h2>
-          <p className="text-sm">{languages.map(lang => `${lang.name} (${lang.proficiency})`).join(', ')}</p>
-        </section>
-      )}
-
+      
     </TemplateWrapper>
   );
 };

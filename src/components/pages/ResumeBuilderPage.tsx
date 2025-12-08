@@ -16,7 +16,6 @@ import EducationForm from '@/components/builder/sections/EducationForm';
 import SkillsForm from '@/components/builder/sections/SkillsForm';
 import ProjectsForm from '@/components/builder/sections/ProjectsForm';
 import CertificationsForm from '@/components/builder/sections/CertificationsForm';
-import LanguagesForm from '@/components/builder/sections/LanguagesForm';
 import { useSearchParams } from 'next/navigation';
 
 const initialResumeData = {
@@ -197,7 +196,7 @@ const ResumeBuilderPage = () => {
             </div>
 
             <div className="bg-card rounded-lg shadow-sm">
-              <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 p-1 h-auto">
+              <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 p-1 h-auto">
                 <TabsTrigger value="personal">Personal</TabsTrigger>
                 <TabsTrigger value="summary">Summary</TabsTrigger>
                 <TabsTrigger value="experience">Experience</TabsTrigger>
@@ -205,7 +204,6 @@ const ResumeBuilderPage = () => {
                 <TabsTrigger value="skills">Skills</TabsTrigger>
                 <TabsTrigger value="projects">Projects</TabsTrigger>
                 <TabsTrigger value="certifications">Certs</TabsTrigger>
-                <TabsTrigger value="languages">Languages</TabsTrigger>
               </TabsList>
 
               <PersonalInfoForm resumeData={resumeData} setResumeData={setResumeData} />
@@ -215,7 +213,6 @@ const ResumeBuilderPage = () => {
               <SkillsForm resumeData={resumeData} setResumeData={setResumeData} />
               <ProjectsForm resumeData={resumeData} setResumeData={setResumeData} />
               <CertificationsForm resumeData={resumeData} setResumeData={setResumeData} />
-              <LanguagesForm resumeData={resumeData} setResumeData={setResumeData} />
             </div>
           </motion.div>
 

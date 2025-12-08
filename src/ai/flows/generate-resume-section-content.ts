@@ -14,7 +14,7 @@ import {z} from 'genkit';
 
 const GenerateResumeSectionContentInputSchema = z.object({
   sectionType: z
-    .enum(['summary', 'skills', 'experience'])
+    .enum(['summary', 'skills', 'experience', 'project'])
     .describe('The type of resume section to generate content for.'),
   userInput: z
     .string()

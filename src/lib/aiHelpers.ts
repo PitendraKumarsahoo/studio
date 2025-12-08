@@ -58,5 +58,19 @@ export const generateExperienceAI = async (experience: any): Promise<string> => 
   }
 };
 
+export const generateProjectDescriptionAI = async (project: any): Promise<string> => {
+  try {
+    const result = await generateResumeSectionContent({
+      sectionType: 'project',
+      userInput: `Generate a professional project description for the following project: ${JSON.stringify(project)}. Use bullet points starting with '•' for key features or achievements.`
+    });
+    return result.content;
+  } catch (error) {
+    console.error("AI Error (Project Description):", error);
+    return "Failed to generate AI description. Please try again later.";
+  }
+};
+
+
 export const checkATSScore = mockCheckATSScore;
 export const suggestKeywords = mockSuggestKeywords;
