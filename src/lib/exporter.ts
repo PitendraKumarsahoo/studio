@@ -8,14 +8,16 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
     throw new Error("Element to capture is not defined.");
   }
 
-  const canvas = await html2canvas(element, {
-    scale: 3, // Higher scale for better quality
+  // Find the actual resume component inside the scaled container.
+  const resumeElement = element.firstChild as HTMLElement;
+  if (!resumeElement) {
+    throw new Error("Resume content not found for PDF export.");
+  }
+
+  const canvas = await html2canvas(resumeElement, {
+    scale: 2, // A good balance of quality and performance
     useCORS: true,
     logging: false,
-    width: element.offsetWidth,
-    height: element.offsetHeight,
-    windowWidth: element.scrollWidth,
-    windowHeight: element.scrollHeight,
   });
 
   const imgData = canvas.toDataURL('image/png');
@@ -27,29 +29,14 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
 
   const A4_WIDTH = 210;
   const A4_HEIGHT = 297;
-  const MARGIN = 0; // No margin
-
-  const pdfWidth = A4_WIDTH - MARGIN * 2;
-  const pdfHeight = A4_HEIGHT - MARGIN * 2;
-
-  const canvasAspectRatio = canvas.width / canvas.height;
-  const pageAspectRatio = pdfWidth / pdfHeight;
-
-  let renderWidth, renderHeight;
-
-  if (canvasAspectRatio > pageAspectRatio) {
-    renderWidth = pdfWidth;
-    renderHeight = pdfWidth / canvasAspectRatio;
-  } else {
-    renderHeight = pdfHeight;
-    renderWidth = pdfHeight * canvasAspectRatio;
-  }
+  const imgWidth = canvas.width;
+  const imgHeight = canvas.height;
   
-  const x = (A4_WIDTH - renderWidth) / 2;
-  const y = 0; // Start from top
+  const ratio = imgWidth / imgHeight;
+  const pdfWidth = A4_WIDTH;
+  const pdfHeight = pdfWidth / ratio;
 
-  pdf.addImage(imgData, 'PNG', x, y, renderWidth, renderHeight);
-  
+  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
   pdf.save(`${(fileName || 'resume').replace(/\s+/g, '_')}.pdf`);
 };
 
