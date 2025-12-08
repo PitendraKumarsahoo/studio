@@ -21,58 +21,34 @@ const HomePage = () => {
     { name: 'Emily Rodriguez', role: 'Product Designer', company: 'Apple', content: 'Beautiful templates and easy to use. I got 3 interview calls within a week of updating my resume!', rating: 5 },
   ];
 
-  const heroImage = getPlaceholderImage('home-hero-image-small');
+  const heroImage = getPlaceholderImage('home-hero-image');
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-transparent py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
-              <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
-                <Sparkles className="w-4 h-4" />
-                <span className="text-sm font-semibold">AI-Powered Resume Builder</span>
-              </div>
-              <h1 className="font-headline text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-                Create a <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Professional Resume</span> in Minutes
+      <section className="relative overflow-hidden bg-slate-900 text-white py-20 lg:py-32">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-accent/30 opacity-30 blur-3xl"></div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+           <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <h1 className="font-headline text-4xl lg:text-7xl font-bold mb-6 leading-tight">
+                Design workflows
+                <br />
+                <span className="text-fuchsia-500">#withResumeAI</span>
               </h1>
-              <p className="text-xl text-foreground/80 mb-8">
-                Build an ATS-optimized resume with AI-powered tools. Choose from 18+ professional templates and land your dream job faster.
+              <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+                ResumeAI lets you design, build, and automate anything - from tasks and workflows to apps and systems - in a few clicks.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/builder">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
-                    Build My Resume
-                  </Button>
-                </Link>
-                <Link href="/templates">
-                  <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-6 text-lg">
-                    View Templates
+                  <Button size="lg" className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-8 py-6 text-lg rounded-full">
+                    Get started free
                   </Button>
                 </Link>
               </div>
-              <div className="flex items-center space-x-6 mt-8 text-sm text-muted-foreground">
-                <div className="flex items-center space-x-2"><Users className="w-5 h-5 text-primary" /><span>100K+ users</span></div>
-                <div className="flex items-center space-x-2"><Award className="w-5 h-5 text-primary" /><span>ATS-Optimized</span></div>
-              </div>
+               <p className="text-sm text-slate-400 mt-4">
+                <CheckCircle className="w-4 h-4 inline-block mr-1.5" />
+                No credit card required
+              </p>
             </motion.div>
-             <motion.div 
-              initial={{ opacity: 0, x: 50 }} 
-              animate={{ opacity: 1, x: 0 }} 
-              transition={{ duration: 0.6, delay: 0.2 }} 
-              className="relative hidden lg:block"
-            >
-              <div className="absolute -inset-8 bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl rounded-full -z-10"></div>
-              <Image 
-                className="relative rounded-2xl shadow-2xl w-full" 
-                alt="Professional resume builder interface" 
-                src={heroImage.imageUrl} 
-                width={heroImage.width} 
-                height={heroImage.height} 
-                data-ai-hint={heroImage.imageHint} 
-              />
-            </motion.div>
-          </div>
         </div>
       </section>
 
