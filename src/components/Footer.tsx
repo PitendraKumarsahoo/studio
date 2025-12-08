@@ -56,7 +56,7 @@ const Footer = () => {
               <span className="font-headline font-semibold text-lg mb-4 block">{category}</span>
               <ul className="space-y-3">
                 {links.map((link) => (
-                  <li key={link.path}>
+                  <li key={`${category}-${link.label}`}>
                     <Link
                       href={link.path}
                       className="text-gray-400 hover:text-white transition-colors"
