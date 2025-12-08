@@ -21,61 +21,38 @@ const HomePage = () => {
     { name: 'Emily Rodriguez', role: 'Product Designer', company: 'Apple', content: 'Beautiful templates and easy to use. I got 3 interview calls within a week of updating my resume!', rating: 5 },
   ];
 
-  const heroImage = getPlaceholderImage('home-hero-make-com');
-
   return (
     <>
       <section className="bg-gradient-to-b from-blue-50/50 to-background py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="grid lg:grid-cols-2 gap-16 items-center"
+            className="text-center"
           >
-            <div className="text-left">
-              <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full font-semibold text-sm mb-4">
-                <Sparkles className="w-5 h-5" />
-                AI-Powered Resume Builder
-              </div>
-              <h1 className="font-headline text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-                Create a <span className="text-blue-600">Professional</span> Resume in <span className="text-teal-500">Minutes</span>
-              </h1>
-              <p className="text-lg text-foreground/80 mb-8 max-w-xl">
-                Build an ATS-optimized resume with AI-powered tools. Choose from 18+ professional templates and land your dream job faster.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
-                <Link href="/builder">
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
-                    Build My Resume
-                  </Button>
-                </Link>
-                <Link href="/templates">
-                  <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
-                    View Templates
-                  </Button>
-                </Link>
-              </div>
+            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full font-semibold text-sm mb-4">
+              <Sparkles className="w-5 h-5" />
+              AI-Powered Resume Builder
             </div>
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="hidden lg:flex items-center justify-center p-4"
-            >
-              <div className="relative w-full max-w-lg">
-                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400 to-pink-500 rounded-3xl blur-xl opacity-50"></div>
-                <Image 
-                  src={heroImage.imageUrl} 
-                  alt={heroImage.description} 
-                  width={heroImage.width} 
-                  height={heroImage.height} 
-                  data-ai-hint={heroImage.imageHint}
-                  className="relative w-full h-auto rounded-2xl shadow-2xl"
-                  priority
-                />
-              </div>
-            </motion.div>
+            <h1 className="font-headline text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+              Create a <span className="text-blue-600">Professional</span> Resume in <span className="text-teal-500">Minutes</span>
+            </h1>
+            <p className="text-lg text-foreground/80 mb-8 max-w-3xl mx-auto">
+              Build an ATS-optimized resume with AI-powered tools. Choose from 18+ professional templates and land your dream job faster.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+              <Link href="/builder">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
+                  Build My Resume
+                </Button>
+              </Link>
+              <Link href="/templates">
+                <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
+                  View Templates
+                </Button>
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
