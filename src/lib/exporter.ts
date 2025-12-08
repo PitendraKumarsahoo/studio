@@ -13,48 +13,56 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
     throw new Error("Resume content not found for PDF export.");
   }
   
-  // A4 paper size in mm
+  // Clone the element to render it off-screen at full size
+  const clone = resumeElement.cloneNode(true) as HTMLElement;
+  clone.style.position = 'absolute';
+  clone.style.left = '-9999px';
+  clone.style.top = '0px';
+  clone.style.zIndex = '-1';
+  clone.style.transform = 'none'; // Ensure no scaling is applied
+  document.body.appendChild(clone);
+
   const A4_WIDTH_MM = 210;
   const A4_HEIGHT_MM = 297;
 
-  // Use a standard DPI for web content
-  const DPI = 96;
-  const A4_WIDTH_PX = (A4_WIDTH_MM / 25.4) * DPI;
+  try {
+    const canvas = await html2canvas(clone, {
+      scale: 2, // Use a higher scale for better quality
+      useCORS: true,
+      logging: false,
+    });
 
-  const canvas = await html2canvas(resumeElement, {
-    scale: A4_WIDTH_PX / resumeElement.offsetWidth,
-    useCORS: true,
-    logging: false,
-    width: resumeElement.offsetWidth,
-    height: resumeElement.offsetHeight,
-    windowWidth: resumeElement.scrollWidth,
-    windowHeight: resumeElement.scrollHeight,
-  });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
 
-  const imgData = canvas.toDataURL('image/png');
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
-  });
+    const pdfWidth = A4_WIDTH_MM;
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-  const pdfWidth = A4_WIDTH_MM;
-  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    let heightLeft = pdfHeight;
+    let position = 0;
 
-  let heightLeft = pdfHeight;
-  let position = 0;
-
-  pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-  heightLeft -= A4_HEIGHT_MM;
-
-  while (heightLeft > 0) {
-    position = heightLeft - pdfHeight;
-    pdf.addPage();
     pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
     heightLeft -= A4_HEIGHT_MM;
+
+    while (heightLeft > 0) {
+      position = heightLeft - pdfHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+      heightLeft -= A4_HEIGHT_MM;
+    }
+    
+    pdf.save(`${(fileName || 'resume').replace(/\s+/g, '_')}.pdf`);
+  } catch (error) {
+    console.error("PDF Export Error:", error);
+    throw error;
+  } finally {
+    // Clean up the cloned element
+    document.body.removeChild(clone);
   }
-  
-  pdf.save(`${(fileName || 'resume').replace(/\s+/g, '_')}.pdf`);
 };
 
 
