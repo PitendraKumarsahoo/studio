@@ -324,6 +324,77 @@ const Minimo: React.FC<TemplateProps> = ({ data, color, variant }) => {
     );
 };
 
+const Academic: React.FC<TemplateProps> = ({ data, color }) => {
+  const { personalInfo, summary, experience, education, skills } = SafeData(data);
+  return (
+    <TemplateWrapper className="p-[1in]" style={{ fontFamily: 'Times, serif' }}>
+      <header className="text-center mb-4">
+        <h1 className="text-2xl font-bold">{personalInfo.fullName || 'Your Name'}</h1>
+        <p className="text-sm">
+          {personalInfo.location}
+          {personalInfo.email && ` | ${personalInfo.email}`}
+          {personalInfo.phone && ` | ${personalInfo.phone}`}
+          {personalInfo.linkedin && ` | ${personalInfo.linkedin}`}
+        </p>
+      </header>
+      <hr className="mb-4"/>
+
+      {summary && (
+        <section className="mb-4">
+          <h2 className="text-base font-bold mb-2">SUMMARY</h2>
+          <p className="text-sm leading-relaxed">{summary}</p>
+        </section>
+      )}
+      <hr className="mb-4"/>
+      
+      {experience.length > 0 && (
+        <section className="mb-4">
+          <h2 className="text-base font-bold mb-2">EXPERIENCE</h2>
+          {experience.map(exp => (
+            <div key={exp.id} className="mb-3">
+              <div className="flex justify-between items-baseline">
+                <h3 className="text-sm font-bold">{exp.position}</h3>
+                <p className="text-sm">{formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}</p>
+              </div>
+              <p className="text-sm italic mb-1">{exp.company}</p>
+              <div className="pl-4 text-sm">
+                {(exp.description || '').split('\n').filter(line => line.trim()).map((line, i) => (
+                    <p key={i} className="before:content-['•'] before:mr-2">{line.replace(/^•\s*/, '')}</p>
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
+       <hr className="mb-4"/>
+
+      {education.length > 0 && (
+        <section className="mb-4">
+          <h2 className="text-base font-bold mb-2">EDUCATION</h2>
+          {education.map(edu => (
+            <div key={edu.id} className="flex justify-between items-baseline mb-1">
+              <div>
+                <h3 className="text-sm font-bold">{edu.school}</h3>
+                <p className="text-sm">{edu.degree}{edu.field && `, ${edu.field}`}</p>
+              </div>
+              <p className="text-sm">{formatDate(edu.startDate)} - {edu.current ? 'Present' : formatDate(edu.endDate)}</p>
+            </div>
+          ))}
+        </section>
+      )}
+      <hr className="mb-4"/>
+
+      {skills.length > 0 && (
+        <section>
+          <h2 className="text-base font-bold mb-2">SKILLS</h2>
+          <p className="text-sm">{skills.map(skill => skill.name).join(' | ')}</p>
+        </section>
+      )}
+    </TemplateWrapper>
+  );
+};
+
+
 const templatesMap: { [key: string]: React.FC<TemplateProps> } = {
     primo: (props) => <Primo {...props} />,
     diamond: (props) => <Diamond {...props} />,
@@ -334,6 +405,7 @@ const templatesMap: { [key: string]: React.FC<TemplateProps> } = {
     influx: (props) => <Influx {...props} />,
     modern: (props) => <Modern {...props} />,
     minimo: (props) => <Minimo {...props} />,
+    academic: (props) => <Academic {...props} />,
     'primo-blue': (props) => <Primo {...props} variant="blue" />,
     'diamond-green': (props) => <Diamond {...props} variant="green" />,
     'cascade-purple': (props) => <Cascade {...props} variant="purple" />,
@@ -357,3 +429,5 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ template, color, data }) 
 };
 
 export default ResumePreview;
+
+    

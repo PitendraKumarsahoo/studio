@@ -17,6 +17,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ selectedTemplate, o
     { id: 'influx', name: 'Influx' },
     { id: 'modern', name: 'Modern' },
     { id: 'minimo', name: 'Minimo' },
+    { id: 'academic', name: 'Academic' },
     { id: 'primo-blue', name: 'Primo Blue' },
     { id: 'diamond-green', name: 'Diamond Green' },
     { id: 'cascade-purple', name: 'Cascade Purple' },
@@ -51,3 +52,5 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ selectedTemplate, o
 };
 
 export default TemplateSelector;
+
+    
