@@ -3,6 +3,9 @@ import React from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Upload } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 type PersonalInfo = {
   fullName?: string;
@@ -12,6 +15,7 @@ type PersonalInfo = {
   location?: string;
   website?: string;
   linkedin?: string;
+  photo?: string; // Data URI for the photo
 };
 
 interface PersonalInfoFormProps {
@@ -27,8 +31,36 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ resumeData, setResu
     }));
   };
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handlePersonalInfoChange('photo', reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <TabsContent value="personal" className="p-6 space-y-4">
+       <div className="flex items-center gap-4">
+        <Avatar className="h-20 w-20">
+          <AvatarImage src={resumeData.personalInfo.photo} alt={resumeData.personalInfo.fullName} />
+          <AvatarFallback>{(resumeData.personalInfo.fullName || 'YN').slice(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div className="space-y-1">
+          <Label>Profile Photo</Label>
+           <Input id="photo-upload" type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
+          <Button asChild variant="outline">
+            <Label htmlFor="photo-upload" className="cursor-pointer">
+              <Upload className="w-4 h-4 mr-2" />
+              Upload Image
+            </Label>
+          </Button>
+          <p className="text-xs text-muted-foreground">Recommended: Square image, under 1MB</p>
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
          <div>
           <Label htmlFor="fullName">Full Name</Label>

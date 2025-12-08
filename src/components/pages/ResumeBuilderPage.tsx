@@ -25,6 +25,7 @@ const initialResumeData = {
     location: 'Bhubaneswar, India',
     linkedin: 'linkedin.com/in/pitendra-sahoo',
     website: 'github.com/pitendra-sahoo',
+    photo: '',
   },
   summary: 'Highly motivated Data Analytics learner with hands-on experience in Excel, Power BI, SQL, Python, and data visualization. Strong analytical mindset with the ability to extract actionable insights and support decision-making.',
   experience: [

@@ -12,6 +12,7 @@ type PersonalInfo = {
   location?: string;
   website?: string;
   linkedin?: string;
+  photo?: string;
 };
 
 type Experience = {
@@ -112,12 +113,13 @@ const Diamond: React.FC<TemplateProps> = ({ data, color, variant }) => {
   const { personalInfo, summary, experience, education, skills } = SafeData(data);
   const isVariant = variant === 'green';
   const profilePic = getPlaceholderImage('template-profile-picture');
-  
+  const imageSrc = personalInfo.photo || profilePic.imageUrl;
+
   return (
     <TemplateWrapper className="flex">
       <div className={`w-1/3 text-white p-6 ${isVariant ? 'bg-gray-800' : ''}`} style={!isVariant ? { backgroundColor: color } : {}}>
         <div className="text-center mb-8">
-            <Image className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white" alt="Profile picture" src={profilePic.imageUrl} width={profilePic.width} height={profilePic.height} data-ai-hint={profilePic.imageHint}/>
+            <Image className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white object-cover" alt="Profile picture" src={imageSrc} width={profilePic.width} height={profilePic.height} data-ai-hint={profilePic.imageHint}/>
             <h1 className="text-2xl font-bold">{personalInfo.fullName || 'Your Name'}</h1>
             <p className="text-sm font-light">{personalInfo.jobTitle || 'Professional Title'}</p>
         </div>
