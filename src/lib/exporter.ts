@@ -8,11 +8,8 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
     throw new Error("Element to capture is not defined.");
   }
 
-  const A4_WIDTH = 210;
-  const A4_HEIGHT = 297;
-
   const canvas = await html2canvas(element, {
-    scale: 3,
+    scale: 3, // Higher scale for better quality
     useCORS: true,
     logging: false,
     width: element.offsetWidth,
@@ -28,22 +25,31 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
     format: 'a4',
   });
 
-  const imgProps = pdf.getImageProperties(imgData);
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-  let heightLeft = pdfHeight;
-  let position = 0;
+  const A4_WIDTH = 210;
+  const A4_HEIGHT = 297;
+  const MARGIN = 0; // No margin
 
-  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-  heightLeft -= pdf.internal.pageSize.getHeight();
+  const pdfWidth = A4_WIDTH - MARGIN * 2;
+  const pdfHeight = A4_HEIGHT - MARGIN * 2;
 
-  while (heightLeft > 0) {
-    position = heightLeft - pdfHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-    heightLeft -= pdf.internal.pageSize.getHeight();
+  const canvasAspectRatio = canvas.width / canvas.height;
+  const pageAspectRatio = pdfWidth / pdfHeight;
+
+  let renderWidth, renderHeight;
+
+  if (canvasAspectRatio > pageAspectRatio) {
+    renderWidth = pdfWidth;
+    renderHeight = pdfWidth / canvasAspectRatio;
+  } else {
+    renderHeight = pdfHeight;
+    renderWidth = pdfHeight * canvasAspectRatio;
   }
+  
+  const x = (A4_WIDTH - renderWidth) / 2;
+  const y = 0; // Start from top
 
+  pdf.addImage(imgData, 'PNG', x, y, renderWidth, renderHeight);
+  
   pdf.save(`${(fileName || 'resume').replace(/\s+/g, '_')}.pdf`);
 };
 
