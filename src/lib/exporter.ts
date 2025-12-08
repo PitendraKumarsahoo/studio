@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, Table, TableRow, TableCell, WidthType, BorderStyle } from 'docx';
 
 // --- PDF EXPORT ---
 export const exportToPDF = async (element: HTMLElement, fileName: string = 'resume') => {
@@ -15,9 +15,13 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
   }
 
   const canvas = await html2canvas(resumeElement, {
-    scale: 2, // A good balance of quality and performance
+    scale: 3, // Increased scale for better quality
     useCORS: true,
     logging: false,
+    width: resumeElement.offsetWidth,
+    height: resumeElement.offsetHeight,
+    windowWidth: resumeElement.offsetWidth,
+    windowHeight: resumeElement.offsetHeight,
   });
 
   const imgData = canvas.toDataURL('image/png');
@@ -32,33 +36,129 @@ export const exportToPDF = async (element: HTMLElement, fileName: string = 'resu
     format: 'a4',
   });
 
-  const canvasAspectRatio = canvas.width / canvas.height;
-  const a4AspectRatio = A4_WIDTH / A4_HEIGHT;
+  // The resume element has a fixed width of 210mm. We use the full width.
+  const pdfWidth = A4_WIDTH;
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-  let pdfWidth, pdfHeight;
-
-  if (canvasAspectRatio > a4AspectRatio) {
-    pdfWidth = A4_WIDTH;
-    pdfHeight = A4_WIDTH / canvasAspectRatio;
-  } else {
-    pdfHeight = A4_HEIGHT;
-    pdfWidth = A4_HEIGHT * canvasAspectRatio;
-  }
-
-  // Center the image on the page
-  const xOffset = (A4_WIDTH - pdfWidth) / 2;
-  const yOffset = (A4_HEIGHT - pdfHeight) / 2;
-  
-  pdf.addImage(imgData, 'PNG', xOffset, yOffset, pdfWidth, pdfHeight);
+  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
   pdf.save(`${(fileName || 'resume').replace(/\s+/g, '_')}.pdf`);
 };
 
 // --- DOCX EXPORT ---
 const formatDateForDocx = (dateString?: string) => {
     if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    } catch (e) {
+        return dateString; // Return original string if parsing fails
+    }
 };
+
+const createSection = (title: string, children: any[]) => {
+    return [
+        new Paragraph({ text: '' }),
+        new Paragraph({
+            children: [
+                new TextRun({
+                    text: title.toUpperCase(),
+                    bold: true,
+                    size: 24,
+                }),
+            ],
+        }),
+        new Paragraph({
+             border: { bottom: { color: "auto", size: 6, space: 1, style: BorderStyle.SINGLE } }
+        }),
+        new Paragraph({ text: '' }),
+        ...children,
+    ];
+};
+
+const createExperienceEntry = (exp: any) => {
+    const rows = [
+        new TableRow({
+            children: [
+                new TableCell({
+                    children: [
+                        new Paragraph({ children: [new TextRun({ text: exp.position, bold: true, size: 22 })] }),
+                        new Paragraph({ children: [new TextRun({ text: exp.company, size: 22 })] })
+                    ],
+                    borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
+                }),
+                new TableCell({
+                    children: [
+                        new Paragraph({ text: `${formatDateForDocx(exp.startDate)} - ${exp.current ? 'Present' : formatDateForDocx(exp.endDate)}`, alignment: AlignmentType.RIGHT }),
+                        new Paragraph({ text: exp.location || '', alignment: AlignmentType.RIGHT })
+                    ],
+                    borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
+                }),
+            ],
+        }),
+    ];
+
+    const descriptionItems = (exp.description || '').split('\n')
+        .filter((line: string) => line.trim())
+        .map(line => new Paragraph({
+            text: line.replace(/^•\s*/, ''),
+            bullet: { level: 0 },
+            style: 'Normal',
+        }));
+
+    const descriptionCell = new TableCell({
+        children: descriptionItems,
+        columnSpan: 2,
+        borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
+    });
+
+    rows.push(new TableRow({ children: [descriptionCell] }));
+
+    return [
+        new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            rows: rows,
+        }),
+        new Paragraph({ text: '' }),
+    ];
+};
+
+const createEducationEntry = (edu: any) => {
+    return new Table({
+        width: { size: 100, type: WidthType.PERCENTAGE },
+        rows: [
+            new TableRow({
+                children: [
+                    new TableCell({
+                        children: [
+                            new Paragraph({ children: [new TextRun({ text: edu.school, bold: true, size: 22 })] }),
+                            new Paragraph({ text: `${edu.degree}, ${edu.field}` }),
+                        ],
+                        borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
+                    }),
+                    new TableCell({
+                        children: [
+                            new Paragraph({ text: edu.location || '', alignment: AlignmentType.RIGHT }),
+                            new Paragraph({ text: `${formatDateForDocx(edu.startDate)} - ${edu.current ? 'Present' : formatDateForDocx(edu.endDate)}`, alignment: AlignmentType.RIGHT }),
+                        ],
+                        borders: { top: { style: "none", size: 0, color: "FFFFFF" }, bottom: { style: "none", size: 0, color: "FFFFFF" }, left: { style: "none", size: 0, color: "FFFFFF" }, right: { style: "none", size: 0, color: "FFFFFF" } },
+                    }),
+                ],
+            }),
+        ],
+    });
+};
+
+const createSkillsParagraph = (skills: any[]) => {
+    const skillTextRuns: TextRun[] = [];
+    (skills || []).forEach((skill, index) => {
+        skillTextRuns.push(new TextRun(skill.name));
+        if (index < skills.length - 1) {
+            skillTextRuns.push(new TextRun(", "));
+        }
+    });
+    return new Paragraph({ children: skillTextRuns });
+};
+
 
 export const exportToDOCX = async (data: any) => {
   const { personalInfo, summary, experience, education, skills } = data;
@@ -66,94 +166,70 @@ export const exportToDOCX = async (data: any) => {
   const doc = new Document({
     sections: [{
       children: [
+        new Paragraph({ text: personalInfo.fullName || 'Your Name', heading: HeadingLevel.TITLE, alignment: AlignmentType.CENTER }),
         new Paragraph({
-          text: personalInfo.fullName || 'Your Name',
-          heading: HeadingLevel.TITLE,
-        }),
-        new Paragraph({
-          text: `${personalInfo.jobTitle || 'Professional Title'}`,
-        }),
-        new Paragraph({ text: '' }),
-        new Paragraph({
-          text: `${personalInfo.email || ''} | ${personalInfo.phone || ''} | ${personalInfo.location || ''}`,
-        }),
-        new Paragraph({
-          text: `${personalInfo.website || ''} | ${personalInfo.linkedin || ''}`,
-        }),
-        
-        new Paragraph({ text: '', style: "spacer" }),
-        new Paragraph({
-          text: 'Professional Summary',
-          heading: HeadingLevel.HEADING_1,
-          border: { bottom: { color: "auto", space: 1, value: "single", size: 6 } },
-        }),
-        new Paragraph({ text: summary || '' }),
-
-        new Paragraph({ text: '', style: "spacer" }),
-        new Paragraph({
-          text: 'Experience',
-          heading: HeadingLevel.HEADING_1,
-          border: { bottom: { color: "auto", space: 1, value: "single", size: 6 } },
-        }),
-        ...(experience || []).flatMap((exp: any) => [
-          new Paragraph({ text: '' }),
-          new Paragraph({
-            children: [new TextRun({ text: exp.position || 'Position', bold: true })],
-          }),
-          new Paragraph({
-            children: [new TextRun({ text: exp.company || 'Company', italics: true })],
-          }),
-          new Paragraph({
-            children: [new TextRun({ text: `${formatDateForDocx(exp.startDate)} - ${exp.current ? 'Present' : formatDateForDocx(exp.endDate)}` })],
-          }),
-          ...(exp.description || '').split('\n').filter((line:string) => line.trim()).map((line: string) => new Paragraph({
-            text: line.replace(/^•\s*/, ''),
-            bullet: { level: 0 },
-          })),
-        ]),
-
-        new Paragraph({ text: '', style: "spacer" }),
-        new Paragraph({
-          text: 'Education',
-          heading: HeadingLevel.HEADING_1,
-          border: { bottom: { color: "auto", space: 1, value: "single", size: 6 } },
-        }),
-        ...(education || []).map((edu: any) => 
-          new Paragraph({
+            alignment: AlignmentType.CENTER,
             children: [
-              new TextRun({ text: `${edu.degree || 'Degree'} in ${edu.field || 'Field'}`, bold: true }),
-              new TextRun({ text: `\n${edu.school || 'School'}`, italics: true }),
-              new TextRun({ text: `\n${formatDateForDocx(edu.startDate)} - ${edu.current ? 'Present' : formatDateForDocx(edu.endDate)}` }),
-            ],
-          })
-        ),
-
-        new Paragraph({ text: '', style: "spacer" }),
-        new Paragraph({
-          text: 'Skills',
-          heading: HeadingLevel.HEADING_1,
-          border: { bottom: { color: "auto", space: 1, value: "single", size: 6 } },
+                new TextRun(personalInfo.location || ''),
+                new TextRun(' | ').break(),
+                new TextRun(personalInfo.email || ''),
+                new TextRun(' | ').break(),
+                new TextRun(personalInfo.linkedin || ''),
+            ]
         }),
-        new Paragraph({
-          text: (skills || []).map((skill: any) => skill.name).join(', '),
-        }),
+        ...(summary ? createSection('Summary', [new Paragraph(summary)]) : []),
+        ...(education.length > 0 ? createSection('Education', (education || []).map(createEducationEntry)) : []),
+        ...(experience.length > 0 ? createSection('Experience', (experience || []).flatMap(createExperienceEntry)) : []),
+        ...(skills.length > 0 ? createSection('Skills', [createSkillsParagraph(skills)]) : []),
       ],
     }],
     styles: {
         document: {
             run: {
                 font: "Inter",
-                size: 22,
+                size: 22, // 11pt
             }
         },
         paragraphStyles: [{
-            id: "spacer",
-            name: "Spacer",
+            id: "Normal",
+            name: "Normal",
             basedOn: "Normal",
             next: "Normal",
+            quickFormat: true,
             run: {
-            size: 12
-            }
+                font: "Inter",
+                size: 22, // 11pt
+            },
+        },
+        {
+            id: "Title",
+            name: "Title",
+            basedOn: "Normal",
+            next: "Normal",
+            quickFormat: true,
+            run: {
+                font: "Inter",
+                size: 44, // 22pt
+                bold: true,
+            },
+            paragraph: {
+                spacing: { after: 120 },
+            },
+        },
+        {
+            id: "Heading1",
+            name: "Heading 1",
+            basedOn: "Normal",
+            next: "Normal",
+            quickFormat: true,
+            run: {
+                font: "Inter",
+                size: 28, // 14pt
+                bold: true,
+            },
+            paragraph: {
+                spacing: { before: 240, after: 120 },
+            },
         }]
     }
   });
